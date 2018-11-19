@@ -37,7 +37,7 @@ class Article extends PureComponent {
   render() {
     const { article, isOpen } = this.props;
     return (
-      <div className="card mx-auto">
+      !article.deleting ? <div className="card mx-auto">
         <div className="card-header">
           <h3>{article.title}</h3>
           <button onClick={this.handleClick} className="test__article--btn btn btn-primary float-right">
@@ -54,7 +54,7 @@ class Article extends PureComponent {
         >
           {this.body}
         </CSSTransition>
-      </div>
+      </div> : <Loader text={`Deleting article: ${article.title}`} />
     );
   };
 
@@ -67,6 +67,7 @@ class Article extends PureComponent {
 
   get body() {
     const { isOpen, article } = this.props;
+
     if (!isOpen) return null;
     if (this.state.hasError) return <div>Some Error in this article</div>;
     if (article.loading) return <Loader />;

@@ -1,4 +1,4 @@
-import { ADD_COMMENT, LOAD_ARTICLE_COMMENTS, SUCCESS } from '../constants';
+import { ADD_COMMENT, LOAD_ARTICLE_COMMENTS, DELETE_ARTICLE, SUCCESS } from '../constants';
 import { Record, OrderedMap } from 'immutable';
 import { arrToMap } from './utils';
 
@@ -23,6 +23,9 @@ export default (state = new ReducerRecord(), action) => {
             ['entities', response.id],
             new CommentRecord({...payload.comment, ...response})
         );
+
+    case DELETE_ARTICLE + SUCCESS:
+        return state.deleteIn(['entities', payload.id]);
 
     case LOAD_ARTICLE_COMMENTS + SUCCESS:
       return state.mergeIn(['entities'], arrToMap(response, CommentRecord));

@@ -14,7 +14,9 @@ import {
 export function deleteArticle(id) {
   return {
     type: DELETE_ARTICLE,
-    payload: { id }
+    payload: { id },
+    callAPI: `/api/article/${id}`,
+    body: {method: "DELETE"}
   };
 }
 

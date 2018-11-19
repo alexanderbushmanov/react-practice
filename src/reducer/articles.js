@@ -16,6 +16,7 @@ const ArticleRecord = Record({
   title: null,
   date: null,
   loading: false,
+  deleting: false,
   commentsLoading: false,
   commentsLoaded: false,
   commentIsAdding: false,
@@ -33,7 +34,11 @@ export default (state = new ReducerRecord(), action) => {
   const { type, payload, response } = action;
 
   switch (type) {
-    case DELETE_ARTICLE:
+
+    case DELETE_ARTICLE + START:
+      return state.setIn(['entities', payload.id, 'deleting'], true);
+
+    case DELETE_ARTICLE + SUCCESS:
         return state.deleteIn(['entities', payload.id]);
 
     case ADD_COMMENT + START:

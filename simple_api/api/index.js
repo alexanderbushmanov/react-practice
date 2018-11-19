@@ -1,7 +1,5 @@
 const router = require('express').Router();
 const mocks = require('./mock');
-const assign = require('object-assign');
-
 const uniqid = require('uniqid');
 
 const reply = (res, body, timeout = 1000, status = 200) =>
@@ -11,11 +9,11 @@ const reply = (res, body, timeout = 1000, status = 200) =>
 
 router.get('/article', (req, res, next) => {
 
-  const articles = mocks.articles,
-    limit = Number(req.query.limit) || articles.length,
-    offset = Number(req.query.offset) || 0;
+    const articles = mocks.articles,
+        limit = Number(req.query.limit) || articles.length,
+        offset = Number(req.query.offset) || 0;
 
-  reply(res, articles.slice(offset, limit + offset));
+    reply(res, articles.slice(offset, limit + offset));
 
 });
 
@@ -26,6 +24,25 @@ router.get('/article/:id', (req, res, next) => {
   if(article) return reply(res, article, 950);
 
   reply(res, { error: 'not found' }, 100, 404);
+});
+
+router.delete('/article/:id', (req, res, next) => {
+
+    const article = mocks.articles.find(article => article.id === req.params.id);
+
+    if(article) {
+
+      if(article.hasOwnProperty("comments")){
+          article.comments.forEach(commentId => {
+              const comment = mocks.comments.find(comment => comment.id === commentId);
+              mocks.comments.splice(mocks.comments.indexOf(comment), 1);
+          });
+      }
+      mocks.articles.splice(mocks.articles.indexOf(article), 1);
+      return reply(res, {status: "OK"});
+    }
+
+    reply(res, { error: 'not found' }, 100, 404);
 });
 
 router.post('/article', (req, res, next) => {
